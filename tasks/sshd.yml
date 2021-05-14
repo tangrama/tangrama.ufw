@@ -1,0 +1,39 @@
+---
+# tasks file for tangrama.ufw
+# UFW supports connection rate limiting, which is useful for protecting
+# against brute-force login attacks.
+# UFW will deny connections if an IP
+# address has attempted to initiate 6 or more connections in the last
+# 30 seconds.
+# See  http://www.debian-administration.org/articles/187
+# for details. Typical usage is:
+- name: Rate limit SSH
+  become: true
+  ufw:
+    rule: limit
+    port: "{{ ssh_port }}"
+    proto: tcp
+
+- name: "Allow all access to SSH port {{ ssh_port }}"
+  become: true
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+    proto: tcp
+
+- name: Check if mosh is installed
+  become: true
+  shell: |
+    set -o pipefail
+    dpkg-query -W -f='${Status}' mosh | grep 'install ok installed'
+  register: is_installed
+  failed_when: no
+  changed_when: no
+
+- name: Enable ports for mosh
+  become: true
+  ufw:
+    rule: allow
+    proto: udp
+    port: "{{ mosh_from_port }}:{{ mosh_to_port }}"
+  when: is_installed.rc == 0

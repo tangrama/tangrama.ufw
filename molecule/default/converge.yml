@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: tangrama.ufw
+
+  vars:
+    ipv6: false
+    ssh_port: 9322
+    mosh_from_port: 60000
+    mosh_to_port: 60010
+    additional_ports:
+      - 80
+      - 443

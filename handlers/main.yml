@@ -1,0 +1,7 @@
+---
+# handlers file for tangrama.ufw
+- name: restart ufw
+  become: true
+  service:
+    name: ufw
+    state: restarted

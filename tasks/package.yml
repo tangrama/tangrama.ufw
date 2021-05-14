@@ -1,0 +1,32 @@
+---
+# tasks file for tangrama.ufw
+
+# Install base packages we always use
+- name: Install UFW package
+  become: true
+  apt:
+    update_cache: yes
+    name: ufw
+    state: present
+
+- name: Enable IPV6 support for ufw
+  become: true
+  lineinfile:
+    path: /etc/default/ufw
+    state: present
+    regexp: '^IPV6'
+    line: 'IPV6=yes'
+  notify: restart ufw
+  when: ipv6 is defined and ipv6
+
+- name: Disable IPV6 support for ufw
+  become: true
+  lineinfile:
+    path: /etc/default/ufw
+    regexp: '^IPV6'
+    line: 'IPV6=no'
+  notify: restart ufw
+  when: (ipv6 is undefined) or not ipv6
+
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers

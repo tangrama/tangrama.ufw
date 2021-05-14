@@ -1,0 +1,25 @@
+---
+# tasks file for tangrama.ufw
+# Additional rules
+# Open ports defined in additional_ports variable
+- name: Allow additional ports
+  become: true
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  with_items: "{{ additional_ports }}"
+
+  # Disallow all incoming and enable UFW
+- name: Disallow all incoming traffic
+  become: true
+  ufw:
+    policy: deny
+    direction: incoming
+
+- name: Allow all outgoing traffic
+  become: true
+  ufw:
+    policy: allow
+    direction: outgoing
+    state: enabled

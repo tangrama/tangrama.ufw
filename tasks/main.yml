@@ -1,0 +1,10 @@
+---
+# tasks file for tangrama.ufw
+# Install ufw package
+- import_tasks: package.yml
+
+# Implement remote access (sshd and mosh) rules
+- import_tasks: sshd.yml
+
+# Deal with additional ports and default rules
+- import_tasks: additional_rules.yml

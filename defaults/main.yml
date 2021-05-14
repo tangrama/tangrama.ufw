@@ -1,0 +1,4 @@
+---
+# defaults file for tangrama.ufw
+ssh_port: 9322
+additional_ports: []
